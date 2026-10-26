@@ -101,12 +101,15 @@ const enum SearchStatus {
     FAVORITES,
     ENABLED,
     DISABLED,
+    HELLOCORD,
     EQUICORD,
     VENCORD,
     NEW,
     USER_PLUGINS,
     API_PLUGINS
 }
+
+const HELLOCORD_PLUGIN_NAMES = new Set(["Bulk Favorite GIFs", "GIF Categories", "GIF Downloader"]);
 
 export const ExcludedReasons: Record<PluginTarget, string> = {
     desktop: "Discord Desktop app or Vesktop/Equibop",
@@ -215,8 +218,11 @@ export default function PluginSettings() {
             case SearchStatus.ENABLED:
                 if (!isPluginEnabled(plugin.name)) return false;
                 break;
+            case SearchStatus.HELLOCORD:
+                if (!HELLOCORD_PLUGIN_NAMES.has(plugin.name)) return false;
+                break;
             case SearchStatus.EQUICORD:
-                if (!PluginMeta[plugin.name].folderName.startsWith("src/equicordplugins/")) return false;
+                if (!PluginMeta[plugin.name].folderName.startsWith("src/equicordplugins/") || HELLOCORD_PLUGIN_NAMES.has(plugin.name)) return false;
                 break;
             case SearchStatus.VENCORD:
                 if (!PluginMeta[plugin.name].folderName.startsWith("src/plugins/")) return false;
@@ -420,7 +426,8 @@ export default function PluginSettings() {
                             { label: "Show Favorites", value: SearchStatus.FAVORITES },
                             { label: "Show Enabled", value: SearchStatus.ENABLED },
                             { label: "Show Disabled", value: SearchStatus.DISABLED },
-                            { label: "Show Hellocord", value: SearchStatus.EQUICORD },
+                            { label: "Show Hellocord", value: SearchStatus.HELLOCORD },
+                            { label: "Show Equicord", value: SearchStatus.EQUICORD },
                             { label: "Show Vencord", value: SearchStatus.VENCORD },
                             { label: "Show New", value: SearchStatus.NEW },
                             hasUserPlugins && { label: "Show UserPlugins", value: SearchStatus.USER_PLUGINS },
