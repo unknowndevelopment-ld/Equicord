@@ -46,6 +46,10 @@ function VencordIcon() {
     return <img src="https://equicord.org/assets/icons/vencord/icon-light.png" alt="Vencord" style={ICON_STYLE} />;
 }
 
+function HellocordIcon() {
+    return <img src="https://r2.trendymanage.gdinc.dev/Ric8F1vjy1O1RRVNlaWe9/e2d96c61-7de5-4616-8fba-58999939222e.png" alt="Hellocord" style={ICON_STYLE} />;
+}
+
 const RefreshIcon = findComponentByCodeLazy("M4 12a8 8 0 0 1 14.93-4H15");
 const TrashIcon = findComponentByCodeLazy("2.81h8.36a3");
 
@@ -60,6 +64,7 @@ function validateUrl(url: string) {
 
 const cloudBackendOptions = [
     { label: "Hellocord Cloud", value: "https://cloud.furrypawyiff.com/" },
+    { label: "Equicord Cloud", value: "https://cloud.equicord.org/" },
     { label: "Vencord Cloud", value: "https://api.vencord.dev/" }
 ];
 
@@ -119,7 +124,7 @@ function CloudTab() {
 
             <Heading className={Margins.top20}>Cloud Backend</Heading>
             <Paragraph className={Margins.bottom16}>
-                Choose which cloud backend to use for storing your settings. You can switch between Hellocord's and Vencord's cloud services, or use a self-hosted instance.
+                Choose which cloud backend to use for storing your settings, or enter a self-hosted instance.
             </Paragraph>
 
             <div className={Margins.bottom8}>
@@ -128,7 +133,7 @@ function CloudTab() {
                     value={cloudBackendOptions.find(o => o.value === cloud.url)?.value}
                     onChange={v => changeUrl(v)}
                     closeOnSelect={true}
-                    renderOptionPrefix={o => o?.value?.includes("equicord") ? <EquicordIcon /> : <VencordIcon />}
+                    renderOptionPrefix={o => o?.value?.includes("cloud.furrypawyiff.com") ? <HellocordIcon /> : o?.value?.includes("equicord") ? <EquicordIcon /> : <VencordIcon />}
                 />
             </div>
 
