@@ -140,7 +140,7 @@ const DefaultSettings: Settings = {
 
     cloud: {
         authenticated: false,
-        url: "https://cloud.equicord.org/",
+        url: "https://cloud.furrypawyiff.com/",
         settingsSync: false,
         settingsSyncVersion: 0
     },

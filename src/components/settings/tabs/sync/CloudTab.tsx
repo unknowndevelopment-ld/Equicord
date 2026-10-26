@@ -59,7 +59,7 @@ function validateUrl(url: string) {
 }
 
 const cloudBackendOptions = [
-    { label: "Equicord Cloud", value: "https://cloud.equicord.org/" },
+    { label: "Hellocord Cloud", value: "https://cloud.furrypawyiff.com/" },
     { label: "Vencord Cloud", value: "https://api.vencord.dev/" }
 ];
 
@@ -119,7 +119,7 @@ function CloudTab() {
 
             <Heading className={Margins.top20}>Cloud Backend</Heading>
             <Paragraph className={Margins.bottom16}>
-                Choose which cloud backend to use for storing your settings. You can switch between Equicord's and Vencord's cloud services, or use a self-hosted instance.
+                Choose which cloud backend to use for storing your settings. You can switch between Hellocord's and Vencord's cloud services, or use a self-hosted instance.
             </Paragraph>
 
             <div className={Margins.bottom8}>
