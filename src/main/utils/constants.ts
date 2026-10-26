@@ -17,8 +17,8 @@
 */
 
 import { app } from "electron";
-import { copyFileSync, existsSync, readFileSync, writeFileSync } from "fs";
-import { join } from "path";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "fs";
+import { join, resolve } from "path";
 
 const suffix = IS_DEV ? "dev" : "";
 
@@ -34,6 +34,94 @@ export const QUICK_CSS_PATH = join(SETTINGS_DIR, "quickCss.css");
 export const SETTINGS_FILE = join(SETTINGS_DIR, "settings.json");
 export const NATIVE_SETTINGS_FILE = join(SETTINGS_DIR, "native-settings.json");
 export const DEV_MIGRATED = join(SETTINGS_DIR, "migration");
+
+function mergeMissing(target: any, source: any): any {
+    if (!target || typeof target !== "object" || Array.isArray(target)
+        || !source || typeof source !== "object" || Array.isArray(source)) return target;
+
+    for (const [key, value] of Object.entries(source)) {
+        if (!(key in target)) {
+            target[key] = value;
+        } else if (target[key] && value && typeof target[key] === "object" && typeof value === "object"
+            && !Array.isArray(target[key]) && !Array.isArray(value)) {
+            mergeMissing(target[key], value);
+        }
+    }
+
+    return target;
+}
+
+function migrateLegacyData() {
+    const migrationMarker = join(SETTINGS_DIR, "hellocord-data-migration");
+    if (existsSync(migrationMarker)) return;
+
+    const dataRoots = new Set<string>();
+    const addLegacyRoots = (userDataDir: string) => {
+        dataRoots.add(resolve(userDataDir, "..", "VencordData", suffix));
+        dataRoots.add(resolve(userDataDir, "..", "Vencord", suffix));
+    };
+
+    if (process.env.DISCORD_USER_DATA_DIR) addLegacyRoots(process.env.DISCORD_USER_DATA_DIR);
+    addLegacyRoots(app.getPath("userData"));
+
+    mkdirSync(SETTINGS_DIR, { recursive: true });
+    let foundLegacyData = false;
+
+    for (const root of dataRoots) {
+        if (!existsSync(root)) continue;
+
+        const legacySettingsDir = join(root, "settings");
+        for (const fileName of ["settings.json", "native-settings.json"]) {
+            const sourcePath = join(legacySettingsDir, fileName);
+            if (!existsSync(sourcePath)) continue;
+
+            try {
+                const sourceData = JSON.parse(readFileSync(sourcePath, "utf-8"));
+                const targetPath = join(SETTINGS_DIR, fileName);
+                const targetData = existsSync(targetPath)
+                    ? JSON.parse(readFileSync(targetPath, "utf-8"))
+                    : {};
+                const mergedData = mergeMissing(targetData, sourceData);
+                writeFileSync(targetPath, JSON.stringify(mergedData, null, 4));
+                foundLegacyData = true;
+            } catch (err) {
+                console.error(`Failed to migrate legacy ${fileName}`, err);
+            }
+        }
+
+        const legacyQuickCss = join(legacySettingsDir, "quickCss.css");
+        if (existsSync(legacyQuickCss) && !existsSync(QUICK_CSS_PATH)) {
+            try {
+                copyFileSync(legacyQuickCss, QUICK_CSS_PATH);
+                foundLegacyData = true;
+            } catch (err) {
+                console.error("Failed to migrate legacy QuickCSS", err);
+            }
+        }
+
+        const legacyThemesDir = join(root, "themes");
+        if (existsSync(legacyThemesDir)) {
+            try {
+                mkdirSync(THEMES_DIR, { recursive: true });
+                for (const fileName of readdirSync(legacyThemesDir)) {
+                    const sourcePath = join(legacyThemesDir, fileName);
+                    const targetPath = join(THEMES_DIR, fileName);
+                    if (statSync(sourcePath).isFile() && !existsSync(targetPath)) {
+                        copyFileSync(sourcePath, targetPath);
+                        foundLegacyData = true;
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to migrate legacy themes", err);
+            }
+        }
+    }
+
+    if (foundLegacyData) writeFileSync(migrationMarker, "migrated");
+}
+
+migrateLegacyData();
+
 export const ALLOWED_PROTOCOLS = [
     "https:",
     "http:",

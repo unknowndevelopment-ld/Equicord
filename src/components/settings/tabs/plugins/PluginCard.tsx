@@ -34,6 +34,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
     const pluginMeta = PluginMeta[plugin.name];
     const isEquicordPlugin = pluginMeta.folderName.startsWith("src/equicordplugins/") ?? false;
     const isVencordPlugin = pluginMeta.folderName.startsWith("src/plugins/") ?? false;
+    const isHellocordPlugin = ["Bulk Favorite GIFs", "GIF Categories", "GIF Downloader"].includes(plugin.name);
     const isUserPlugin = pluginMeta?.userPlugin ?? false;
     const isModifiedPlugin = plugin.isModified ?? false;
 
@@ -95,10 +96,16 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
             title: "Modified Vencord Plugin"
         },
         {
-            condition: isEquicordPlugin,
+            condition: isHellocordPlugin,
             src: "https://r2.trendymanage.gdinc.dev/Ric8F1vjy1O1RRVNlaWe9/e2d96c61-7de5-4616-8fba-58999939222e.png",
             alt: "Hellocord",
             title: "Hellocord Plugin"
+        },
+        {
+            condition: isEquicordPlugin,
+            src: "https://equicord.org/assets/favicon.png",
+            alt: "Equicord",
+            title: "Equicord Plugin"
         },
         {
             condition: isVencordPlugin,
