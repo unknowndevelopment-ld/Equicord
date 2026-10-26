@@ -1,12 +1,13 @@
 /*
- * Equicord UserPlugin
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import definePlugin from "@utils/types";
 import { showToast, UserSettingsActionCreators } from "@webpack/common";
 
-const STAR_ICON = `<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24"><path fill="currentColor" d="M10.81 2.86c.38-1.15 2-1.15 2.38 0l1.89 5.83h6.12c1.2 0 1.71 1.54.73 2.25l-4.95 3.6 1.9 5.82a1.25 1.25 0 0 1-1.93 1.4L12 18.16l-4.95 3.6c-.98.7-2.3-.25-1.92-1.4l1.89-5.82-4.95-3.6a1.25 1.25 0 0 1 .73-2.25h6.12l1.9-5.83Z"/></svg>`;
+const STAR_ICON = "<svg aria-hidden=\"true\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" fill=\"none\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M10.81 2.86c.38-1.15 2-1.15 2.38 0l1.89 5.83h6.12c1.2 0 1.71 1.54.73 2.25l-4.95 3.6 1.9 5.82a1.25 1.25 0 0 1-1.93 1.4L12 18.16l-4.95 3.6c-.98.7-2.3-.25-1.92-1.4l1.89-5.82-4.95-3.6a1.25 1.25 0 0 1 .73-2.25h6.12l1.9-5.83Z\"/></svg>";
 
 const BUTTON_LABEL = "Favorite all GIFs in this message";
 
@@ -241,7 +242,7 @@ function processMessage(messageEl: HTMLElement) {
     btn.innerHTML = STAR_ICON;
     btn.style.cssText = "position:absolute;top:6px;right:6px;z-index:100;background:rgba(0,0,0,0.45);border:none;border-radius:50%;padding:6px;color:#f0b232;cursor:pointer;display:flex;align-items:center;justify-content:center;";
 
-    btn.addEventListener("click", async (e) => {
+    btn.addEventListener("click", async e => {
         e.preventDefault();
         e.stopPropagation();
         try {
@@ -280,14 +281,14 @@ function scheduleFullScan() {
 export default definePlugin({
     name: "Bulk Favorite GIFs",
     description: "Adds a star button at the top right of messages containing multiple GIFs to favorite them all at once.",
-    authors: [{ name: "User", id: 0n }],
+    authors: [{ name: "Unknown Development", id: 0n }],
     tags: ["Emotes", "Utility"],
     enabledByDefault: true,
     start() {
         scanMessages();
-        observer = new MutationObserver((mutations) => {
+        observer = new MutationObserver(mutations => {
             for (const mutation of mutations) {
-                mutation.addedNodes.forEach((node) => {
+                mutation.addedNodes.forEach(node => {
                     if (node.nodeType === Node.ELEMENT_NODE) {
                         processRoot(node as unknown as ParentNode);
                     }
@@ -306,7 +307,7 @@ export default definePlugin({
             clearTimeout(scanTimer);
             scanTimer = null;
         }
-        document.querySelectorAll('[data-fav-all-gifs]').forEach((m) => {
+        document.querySelectorAll("[data-fav-all-gifs]").forEach(m => {
             delete (m as any).dataset.favAllGifs;
             m.querySelectorAll(`button[aria-label="${BUTTON_LABEL}"]`).forEach(b => b.remove());
             (m as HTMLElement).style.position = "";

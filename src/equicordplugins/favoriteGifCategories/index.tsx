@@ -1,11 +1,11 @@
 /*
- * Equicord UserPlugin
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import definePlugin from "@utils/types";
 import { definePluginSettings } from "@api/Settings";
-import { OptionType } from "@utils/types";
+import definePlugin, { OptionType } from "@utils/types";
 import { showToast, UserSettingsActionCreators } from "@webpack/common";
 
 type Category = { id: string; name: string };
@@ -14,7 +14,7 @@ type CategoryData = { categories: Category[]; assignments: Record<string, string
 const PICKER_CARD = ".result__2dc39";
 const FAVORITE_BUTTON = '[aria-label="Remove from Favorites"]';
 const HEADER_MARK = "[data-fav-gif-category-bar]";
-const FOLDER_ICON = `<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H12l-2-2Z"/></svg>`;
+const FOLDER_ICON = "<svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M10 4H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H12l-2-2Z\"/></svg>";
 const BACKUP_FORMAT = "EquicordGifCategories";
 // Shared bundle key: this hides backup contents from casual inspection, but is
 // intentionally portable and is not a security boundary against plugin readers.
@@ -887,7 +887,7 @@ function renderCategoryView(content: HTMLElement, categoryId: string, data: Cate
         favorite.setAttribute("role", "button");
         favorite.tabIndex = 0;
         favorite.style.cssText = "position:absolute;top:4px;right:4px;z-index:2;";
-        if (!favorite.querySelector("svg")) favorite.innerHTML = `<svg class="icon__43deb" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10.81 2.86c.38-1.15 2-1.15 2.38 0l1.89 5.83h6.12c1.2 0 1.71 1.54.73 2.25l-4.95 3.6 1.9 5.82a1.25 1.25 0 0 1-1.93 1.4L12 18.16l-4.95 3.6c-.98.7-2.3-.25-1.92-1.4l1.89-5.82-4.95-3.6a1.25 1.25 0 0 1 .73-2.25h6.12l1.9-5.83Z"/></svg>`;
+        if (!favorite.querySelector("svg")) favorite.innerHTML = "<svg class=\"icon__43deb\" aria-hidden=\"true\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M10.81 2.86c.38-1.15 2-1.15 2.38 0l1.89 5.83h6.12c1.2 0 1.71 1.54.73 2.25l-4.95 3.6 1.9 5.82a1.25 1.25 0 0 1-1.93 1.4L12 18.16l-4.95 3.6c-.98.7-2.3-.25-1.92-1.4l1.89-5.82-4.95-3.6a1.25 1.25 0 0 1 .73-2.25h6.12l1.9-5.83Z\"/></svg>";
 
         const nativeDownload = results.querySelector<HTMLElement>('[aria-label="Download GIF"]');
         const download = nativeDownload?.cloneNode(true) as HTMLElement || favorite.cloneNode(true) as HTMLElement;
@@ -897,7 +897,7 @@ function renderCategoryView(content: HTMLElement, categoryId: string, data: Cate
         download.tabIndex = 0;
         download.style.cssText = "position:absolute;top:4px;right:40px;z-index:2;";
         const downloadIcon = download.querySelector("svg");
-        if (downloadIcon) downloadIcon.outerHTML = `<svg class="icon__43deb" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        if (downloadIcon) downloadIcon.outerHTML = "<svg class=\"icon__43deb\" aria-hidden=\"true\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M12 3v12m0 0 4-4m-4 4-4-4M5 21h14\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
 
         card.addEventListener("click", event => {
             if (event.target === favorite || event.target === download || favorite.contains(event.target as Node) || download.contains(event.target as Node)) return;
@@ -1005,7 +1005,7 @@ function scheduleScan() {
 export default definePlugin({
     name: "GIF Categories",
     description: "Right-click GIF favorites to organize them into persistent categories shown at the top of the Favorites picker.",
-    authors: [{ name: "User", id: 0n }],
+    authors: [{ name: "Unknown Development", id: 0n }],
     tags: ["Emotes", "Utility"],
     settings,
     enabledByDefault: true,

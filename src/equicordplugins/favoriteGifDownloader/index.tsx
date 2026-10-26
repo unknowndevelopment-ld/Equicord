@@ -1,5 +1,6 @@
 /*
- * Equicord UserPlugin
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -10,13 +11,13 @@ import { applyPalette, GIFEncoder, quantize } from "gifenc";
 
 const Native = VencordNative.pluginHelpers["GIF Downloader"] as PluginNative<typeof import("./native")>;
 
-const DOWNLOAD_ICON = `<svg class="icon__43deb" aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const DOWNLOAD_ICON = "<svg class=\"icon__43deb\" aria-hidden=\"true\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"none\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M12 3v12m0 0 4-4m-4 4-4-4M5 21h14\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
 
 let downloadCounter = 1;
 
 function getFavoriteGifUrls(): string[] {
     try {
-        const gifs = (UserSettingsActionCreators as any).FrecencyUserSettingsActionCreators.getCurrentValue().favoriteGifs.gifs;
+        const { gifs } = (UserSettingsActionCreators as any).FrecencyUserSettingsActionCreators.getCurrentValue().favoriteGifs;
         const entries = Object.values(gifs) as any[];
         // Sort by stored order descending to match the picker's
         // most-recently-favorited-first (top-to-bottom) display.
@@ -254,7 +255,7 @@ async function downloadGif(url: string) {
 }
 
 function promptNumber(max: number): Promise<string | null> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         const overlay = document.createElement("div");
         overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;display:flex;align-items:center;justify-content:center;";
 
@@ -287,7 +288,7 @@ function promptNumber(max: number): Promise<string | null> {
 
         cancel.onclick = () => { cleanup(); resolve(null); };
         ok.onclick = () => { cleanup(); resolve(input.value); };
-        input.addEventListener("keydown", (e) => {
+        input.addEventListener("keydown", e => {
             if (e.key === "Enter") { cleanup(); resolve(input.value); }
             if (e.key === "Escape") { cleanup(); resolve(null); }
         });
@@ -374,7 +375,7 @@ function processSingleButtons(root: ParentNode | null) {
     const favButtons: Element[] = [];
     if (root instanceof Element && root.matches('[aria-label="Remove from Favorites"]')) favButtons.push(root);
     favButtons.push(...root.querySelectorAll('[aria-label="Remove from Favorites"]'));
-    favButtons.forEach((favBtn) => {
+    favButtons.forEach(favBtn => {
         const result = favBtn.parentElement;
         if (!result) return;
         if (result.querySelector('[aria-label="Download GIF"]')) return;
@@ -387,7 +388,7 @@ function processSingleButtons(root: ParentNode | null) {
             dlBtn.setAttribute("aria-label", "Download GIF");
             dlBtn.className = dlBtn.className
                 .split(/\s+/)
-                .filter((c) => !/selected/i.test(c))
+                .filter(c => !/selected/i.test(c))
                 .join(" ");
             const svg = dlBtn.querySelector("svg");
             if (svg) svg.outerHTML = DOWNLOAD_ICON;
@@ -402,7 +403,7 @@ function processSingleButtons(root: ParentNode | null) {
                 (dlBtn as HTMLElement).style.right = `${right}px`;
             }
 
-            dlBtn.addEventListener("click", (e) => {
+            dlBtn.addEventListener("click", e => {
                 e.preventDefault();
                 e.stopPropagation();
                 // Discord recycles picker result nodes, so the URL captured when
@@ -421,7 +422,7 @@ function processSingleButtons(root: ParentNode | null) {
 function processBulkButton(root: ParentNode | null) {
     if (!root || !root.querySelectorAll) return;
     const inputs = root.querySelectorAll('input[placeholder="Search Favorites"]');
-    inputs.forEach((input) => {
+    inputs.forEach(input => {
         let header: HTMLElement | null = input.parentElement;
         while (header && !/favoritesHeader/i.test(header.className || "")) {
             header = header.parentElement;
@@ -469,7 +470,7 @@ function scheduleScan() {
 export default definePlugin({
     name: "GIF Downloader",
     description: "Downloads favorite GIFs. On first download, choose a folder (Documents/GIFS by default); the location is remembered for future downloads.",
-    authors: [{ name: "User", id: 0n }],
+    authors: [{ name: "Unknown Development", id: 0n }],
     tags: ["Emotes", "Utility"],
     enabledByDefault: true,
     start() {
@@ -486,9 +487,9 @@ export default definePlugin({
         };
 
         processRoot(document);
-        observer = new MutationObserver((mutations) => {
+        observer = new MutationObserver(mutations => {
             for (const mutation of mutations) {
-                mutation.addedNodes.forEach((node) => {
+                mutation.addedNodes.forEach(node => {
                     if (node.nodeType === Node.ELEMENT_NODE) {
                         processRoot(node as unknown as ParentNode);
                     }
@@ -506,7 +507,7 @@ export default definePlugin({
             clearTimeout(scanTimer);
             scanTimer = null;
         }
-        document.querySelectorAll('[aria-label="Download GIF"]').forEach((n) => n.remove());
-        document.querySelectorAll("[data-fav-bulk]").forEach((n) => n.remove());
+        document.querySelectorAll('[aria-label="Download GIF"]').forEach(n => n.remove());
+        document.querySelectorAll("[data-fav-bulk]").forEach(n => n.remove());
     },
 });
