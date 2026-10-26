@@ -263,7 +263,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
                                 />
                                 <WebsiteButton
                                     text="Website"
-                                    href={isEquicordPlugin ? `https://equicord.org/plugins/${plugin.name}` : `https://vencord.dev/plugins/${plugin.name}`}
+                                    href={isEquicordPlugin ? `https://github.com/unknowndevelopment-ld/Equicord/tree/main/src/equicordplugins/${plugin.name}` : `https://vencord.dev/plugins/${plugin.name}`}
                                 />
                                 <GithubButton
                                     text="Source Code"

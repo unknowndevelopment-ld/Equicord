@@ -13,7 +13,7 @@ export const settings = definePluginSettings({
     format: {
         component: ({ setValue }) => FormatSetting(setValue),
         type: OptionType.COMPONENT,
-        default: "{equicordIcon} Equicord {equicordVersion} ({equicordHash})",
+        default: "{equicordIcon} Hellocord {equicordVersion} ({equicordHash})",
         restartNeeded: true
     }
 });
@@ -33,11 +33,11 @@ export const settingVariables = [
     "{buildNumber} - Discord build number (e.g. 123456)",
     "{buildHash} - Discord build hash (e.g. 123456789)",
     "",
-    "Equicord Variables:",
-    "{equicordIcon} - Equicord icon",
-    "{equicordVersion} - Version of Equicord (e.g. 1.0.0)",
-    "{equicordHash} - Equicord build hash (e.g. 123456789)",
-    "{equicordPlatform} - Platform Equicord is running on (e.g. Dev Build)",
+    "Hellocord Variables:",
+    "{equicordIcon} - Hellocord icon",
+    "{equicordVersion} - Version of Hellocord (e.g. 1.0.0)",
+    "{equicordHash} - Hellocord build hash (e.g. 123456789)",
+    "{equicordPlatform} - Platform Hellocord is running on (e.g. Dev Build)",
     "",
     "Equibop Specific Variables:",
     "{equibopHash} - Equibop build hash (e.g. 123456789)",

@@ -82,31 +82,31 @@ const notify = (window: BaseWindow | undefined, title: string, message: string) 
 function createVencordMenuItems(): MenuItemConstructorOptions[] {
     return [
         {
-            label: "Equicord",
+            label: "Hellocord",
             submenu: [
                 {
-                    label: "About Equicord",
+                    label: "About Hellocord",
                     click: () => openAboutWindow()
                 },
                 {
-                    label: "Update Equicord",
+                    label: "Update Hellocord",
                     async click(_item, window) {
                         try {
                             const updateAvailable = await updater.fetchUpdate();
                             if (!updateAvailable) {
-                                return notify(window, "No Update Available", "You are already using the latest version of Equicord.");
+                                return notify(window, "No Update Available", "You are already using the latest version of Hellocord.");
                             }
 
                             const result = await updater.applyUpdate();
                             if (!result) {
-                                return notify(window, "Update Failed", "Failed to apply the update for Equicord.");
+                                return notify(window, "Update Failed", "Failed to apply the update for Hellocord.");
                             }
 
-                            await notify(window, "Update Successful", "Now relaunching Equicord to apply the update.");
+                            await notify(window, "Update Successful", "Now relaunching Hellocord to apply the update.");
                             app.relaunch();
                             app.exit();
                         } catch (e) {
-                            notify(window, "Update Error", `An error occurred while updating Equicord.\n\n${String(e)}`);
+                            notify(window, "Update Error", `An error occurred while updating Hellocord.\n\n${String(e)}`);
                         }
                     }
                 },
@@ -128,7 +128,7 @@ export function patchTrayMenu(): void {
     const originalBuildFromTemplate = Menu.buildFromTemplate;
 
     Menu.buildFromTemplate = function (template: MenuItemConstructorOptions[]) {
-        const alreadyPatched = template.some(item => item.label === "Equicord");
+        const alreadyPatched = template.some(item => item.label === "Hellocord");
         if (isTrayMenu(template) && !alreadyPatched) {
             const insertIndex = findInsertIndex(template);
             const vencordItems = createVencordMenuItems();

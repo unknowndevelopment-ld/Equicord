@@ -96,9 +96,9 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
         },
         {
             condition: isEquicordPlugin,
-            src: "https://equicord.org/assets/favicon.png",
-            alt: "Equicord",
-            title: "Equicord Plugin"
+            src: "https://r2.trendymanage.gdinc.dev/Ric8F1vjy1O1RRVNlaWe9/e2d96c61-7de5-4616-8fba-58999939222e.png",
+            alt: "Hellocord",
+            title: "Hellocord Plugin"
         },
         {
             condition: isVencordPlugin,
