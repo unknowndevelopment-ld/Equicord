@@ -31,6 +31,7 @@ let draggingCategory = false;
 let draggedCategoryId: string | null = null;
 let suppressCategoryClick = false;
 let categoryActivationInProgress = false;
+let nativeGifSelector: ((gif: { url: string; [key: string]: any; }) => void) | null = null;
 
 const settings = definePluginSettings({
     data: {
@@ -319,10 +320,15 @@ function nativeResultCards(): HTMLElement[] {
 }
 
 function selectCategoryGif(item: { src: string; format: number; width: number; height: number; key: string; }) {
-    // Use Discord's own rendered result click to select/send. Calling the
-    // captured callback directly is unreliable: Discord's callback expects
-    // its internal GIF result object, not the persisted favorite record, and
-    // may silently ignore these category-created objects.
+    if (nativeGifSelector) {
+        // Discord's picker callback accepts the selected media URL and sends
+        // it through the same path as clicking a native GIF result.
+        nativeGifSelector({ url: pickerSource(item.src) });
+        return;
+    }
+
+    // Compatibility fallback for Discord builds where the callback patch
+    // does not match.
     void activateNativeResult(item.key);
 }
 
@@ -998,6 +1004,20 @@ export default definePlugin({
     tags: ["Emotes", "Utility"],
     settings,
     enabledByDefault: true,
+    patches: [{
+        find: "#{intl::EXPRESSION_PICKER_CATEGORIES_A11Y_LABEL}",
+        replacement: {
+            // Capture the GIF callback from the same picker body expression
+            // used by Favorite Anything; the simpler property-only match can
+            // miss this callback in Discord's minified component.
+            match: /\{onSelectGIF:(\i),[^}]{20,40}\}\):null,(?=(\i)===)/,
+            replace: "$&$self.captureGifSelector($1),"
+        }
+    }],
+    captureGifSelector(callback: (gif: { url: string; [key: string]: any; }) => void) {
+        nativeGifSelector = callback;
+        return callback;
+    },
     start() {
         migrateLegacySettings();
         scan();
@@ -1006,6 +1026,7 @@ export default definePlugin({
         observer.observe(document.body, { childList: true, subtree: true });
     },
     stop() {
+        nativeGifSelector = null;
         observer?.disconnect();
         observer = null;
         document.removeEventListener("contextmenu", onContextMenu, true);
