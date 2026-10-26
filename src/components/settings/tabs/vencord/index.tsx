@@ -176,7 +176,7 @@ function EquicordSettings() {
 
     return (
         <SettingsTab>
-            {(isEquicordDonor(user?.id) || isVencordDonor(user?.id)) ? (
+            {(isEquicordDonor(user?.id) || isVencordDonor(user?.id)) && (
                 <SpecialCard
                     title="Donations"
                     subtitle="Thank you for donating!"
@@ -192,16 +192,6 @@ function EquicordSettings() {
                     backgroundColor="#ED87A9"
                 >
                     <DonateButtonComponent donated={true} />
-                </SpecialCard>
-            ) : (
-                <SpecialCard
-                    title="Support the Project"
-                    description="Please consider supporting the development of Hellocord by donating!"
-                    cardImage={donateImage}
-                    backgroundImage={DONOR_BACKGROUND_IMAGE}
-                    backgroundColor="#c3a3ce"
-                >
-                    <DonateButtonComponent />
                 </SpecialCard>
             )}
             {isAnyPluginDev(user?.id) && (
